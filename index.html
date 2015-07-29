@@ -1,6 +1,8 @@
 <!DOCTYPE html>
 <html>
 <body>
+<p id="lblTitle">loading....</p>
+<p><input id="txtInput" value="Bath,England"/> <button onclick="javascript:getDataFromYahoo();">Search</button></p>
 
   <svg height="600" width="600">
       <!---->
@@ -114,6 +116,8 @@
 
   </svg>
 
+
+
 <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
 
 <script>
@@ -130,17 +134,6 @@ var coat = $("#coat");
 var umbrella = $("#umbrella");
 var trousers = $("#trousers");
 var woolyhat = $("#woolyhat");
-
-trousers.attr("visibility", "hidden");
-umbrella.attr("visibility", "hidden");
-coat.attr("visibility", "hidden");
-scarf.attr("visibility", "hidden");
-shorts.attr("visibility", "hidden");
-tshirt.attr("visibility", "hidden");
-sunglasses.attr("visibility", "hidden");
-sunhat.attr("visibility", "hidden");
-long_tshirt.attr("visibility", "hidden");
-woolyhat.attr("visibility", "hidden");
 
 function workOutPicture(number) {
 
@@ -186,12 +179,30 @@ function workOutPicture(number) {
 
 function getDataFromYahoo(){
 
+//hide all our items
+  trousers.attr("visibility", "hidden");
+  umbrella.attr("visibility", "hidden");
+  coat.attr("visibility", "hidden");
+  scarf.attr("visibility", "hidden");
+  shorts.attr("visibility", "hidden");
+  tshirt.attr("visibility", "hidden");
+  sunglasses.attr("visibility", "hidden");
+  sunhat.attr("visibility", "hidden");
+  long_tshirt.attr("visibility", "hidden");
+  woolyhat.attr("visibility", "hidden");
+
+
+  if ($("#txtInput").val().length > 0 ) {
+    loc = $("#txtInput").val();
+  }
+
     $.ajax({
         url: "https://query.yahooapis.com/v1/public/yql?q=select%20item.condition%20from%20weather.forecast%20where%20woeid%20in%20(select%20woeid%20from%20geo.places(1)%20where%20text%3D%22"+encodeURIComponent(loc) +"%22)&format=json&diagnostics=true",
         success: function (data){
             workOutPicture(parseInt( data.query.results.channel.item.condition.code) );
             console.log(data.query.results.channel.item.condition.text);
             console.log(data.query.results.channel.item.condition.code);
+            $("#lblTitle").html(data.query.results.channel.item.condition.text);
         },
         error: function(error){
          alert(error);
@@ -201,6 +212,9 @@ function getDataFromYahoo(){
 }
 
 getDataFromYahoo();
+
+
+
 
     //workOutPicture(13);
 
